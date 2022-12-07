@@ -10,8 +10,10 @@ def lexAnalyzer(fileDirectory):
     f.close
     #tokens inside the read text file
     prog_tokens = nltk.wordpunct_tokenize(prog)
+    #print(prog_tokens)
     #regex statements for statements,operators,numbers,identifiers and special characters to get the type of each token
     reg_statements = "for"
+    # == < > not operators 3aizen nhotaha fhaga lwhdha
     reg_op = "(\++)|(--)|(-)|(\+)|(=)|(==)|(\*)|(\/)|(%)|(<=)|(<)|(>)|(>=)|(\^)"
     reg_nums = "\d+"
     reg_id = "^[a-zA-Z_]+[a-zA-Z0-9_]*"
@@ -31,7 +33,7 @@ def lexAnalyzer(fileDirectory):
         else:
             ttype = 'Unknown'
         df.loc[len(df)] = [token,ttype]
-    #display(df)
+    display(df)
     return prog_tokens
 
 
