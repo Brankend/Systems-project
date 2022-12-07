@@ -1,21 +1,13 @@
 s -> for(cond){body}
-
-
 cond -> init;cmp;body
 init -> id = id | id = num
-cmp -> id comop id | id cmpop num
-cmpop -> > | < | >= | <= | ==
-
-
-
-
+cmp -> id cmpop id | id cmpop num
+cmpop -> > | < | >= | <= | == | != | !> | !<
 body -> id = line
 line -> id operator id | id operator num | num operator id | num operator num
-
-
-num -> 0 | 1num | 2num | 3num | 4num | 5num | 6num | 7num | 8num | 9num | ε
+num -> 0num | 1num | 2num | 3num | 4num | 5num | 6num | 7num | 8num | 9num | ε
 operator -> + | - | * | \ | ^ | %
 id -> letter id1
 id1 -> digit id1 | letter id1 | ε
 digit -> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
-letter -> a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z
+letter -> a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|_
