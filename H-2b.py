@@ -46,6 +46,8 @@ prog_tokens = lexAnalyzer('code.cplg')#(fileDirectory=fileDirec)
 tokens_stack = []
 for token in prog_tokens:
     tokens_stack.append(token)
+
+
 letterRule = []
 for x in range (65,91):
     letterRule.append(chr(x))
@@ -53,10 +55,55 @@ for x in range (97,123):
     letterRule.append(chr(x))
 letterRule.append('_')
 letter = Node(data ='letter',children=letterRule)
+
+
 digitRule = []
 for x in range(48,58):
     digitRule.append(chr(x))
 print(digitRule)
 digit = Node(data='digit',children=digitRule)
-#id1 = Node(data = 'id1',children=[digit,id1])
+
+
+id1 = Node(data = 'id1',children = [])
+id1Rule = [ [digit,id1] , [letter,id1],None]
+id1.children = id1Rule
+
+
+idRule = [letter,id1]
+id = Node(data='id',children= idRule)
+
+
+operatorRule = ['+','-','*','/','^','%']
+operator = Node(data='operator',children= operatorRule)
+
+
+num = Node(data='num',children=[])
+numRule = [[0,num],[1,num],[2,num],[3,num],[4,num],[5,num],[6,num],[7,num],[8,num],[9,num],None]
+num.children = numRule
+
+
+line2Rule = [num,operator]
+line2 = Node(data = 'line2',children=line2Rule)
+lineRule = [[line2,operator,id],[line2,operator,num]]
+line = Node(data = 'line',children=lineRule)
+
+bodyRule = [id,'=',line]
+body = Node(data='body',children=bodyRule)
+
+cmpopRule = ['>','<','>=','<=','==','!=','!>','!<']
+cmpop = Node(data='cmpop',children=cmpopRule)
+
+cmpRule = [[id,cmpop,id],[id,cmpop,num]]
+cmp = Node(data='cmp',children=cmpRule)
+
+initRule = [[id,'=',id],[id,'=',num]]
+init = Node(data='init',children=initRule)
+
+condRule = [init,';',cmp,';',body]
+cond = Node(data='cond',children=condRule)
+
+sRule = ['for','(',cond,')','{',body,'}']
+s = Node(data='s',children=sRule)
+    
+
 #print(tree.children[len(tree.children)-1])
