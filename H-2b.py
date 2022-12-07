@@ -34,8 +34,10 @@ def lexAnalyzer(fileDirectory):
     #display(df)
     return prog_tokens
 
-fileDirec = input('inter file directory')
-prog_tokens = lexAnalyzer(fileDirectory=fileDirec)
+
+
+#fileDirec = input('inter file directory')
+prog_tokens = lexAnalyzer('code.cplg')#(fileDirectory=fileDirec)
 tokens_stack = []
 for token in prog_tokens:
     tokens_stack.append(token)
