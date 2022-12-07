@@ -8,14 +8,15 @@ def lexAnalyzer(fileDirectory):
     for x in f:
         prog = prog + x + ' '
     f.close
+    #tokens inside the read text file
     prog_tokens = nltk.wordpunct_tokenize(prog)
-
+    #regex statements for statements,operators,numbers,identifiers and special characters to get the type of each token
     reg_statements = "for"
     reg_op = "(\++)|(--)|(-)|(\+)|(=)|(==)|(\*)|(\/)|(%)|(<=)|(<)|(>)|(>=)|(\^)"
     reg_nums = "\d+"
     reg_id = "^[a-zA-Z_]+[a-zA-Z0-9_]*"
     reg_sc = ",|\(|\)|;|(\{)|(\})"
-    df = pd.DataFrame(columns=['Token','Type'])
+    df = pd.DataFrame(columns=['Token','Type']) #dataframe that's going to contain each token and its type
     for token in prog_tokens:
         if(re.findall(reg_statements,token)):
             ttype = 'Statement'
@@ -29,11 +30,12 @@ def lexAnalyzer(fileDirectory):
             ttype = 'specialCharacter'
         else:
             ttype = 'Unknown'
-        #df2 = pd.DataFrame({token:ttype},index=[0])
         df.loc[len(df)] = [token,ttype]
-        #df = df.append({token:ttype},ignore_index = True)
-    display(df)
-    return df
+    #display(df)
+    return prog_tokens
 
 fileDirec = input('inter file directory')
-df = lexAnalyzer(fileDirectory=fileDirec)
+prog_tokens = lexAnalyzer(fileDirectory=fileDirec)
+tokens_stack = []
+for token in prog_tokens:
+    tokens_stack.append(token)
