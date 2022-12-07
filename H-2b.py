@@ -36,10 +36,27 @@ def lexAnalyzer(fileDirectory):
     display(df)
     return prog_tokens
 
-
+class Node:
+    def __init__(self,data,children):
+        self.data = data
+        self.children = children
 
 #fileDirec = input('inter file directory')
 prog_tokens = lexAnalyzer('code.cplg')#(fileDirectory=fileDirec)
 tokens_stack = []
 for token in prog_tokens:
     tokens_stack.append(token)
+letterRule = []
+for x in range (65,91):
+    letterRule.append(chr(x))
+for x in range (97,123):
+    letterRule.append(chr(x))
+letterRule.append('_')
+letter = Node(data ='letter',children=letterRule)
+digitRule = []
+for x in range(48,58):
+    digitRule.append(chr(x))
+print(digitRule)
+digit = Node(data='digit',children=digitRule)
+#id1 = Node(data = 'id1',children=[digit,id1])
+#print(tree.children[len(tree.children)-1])
