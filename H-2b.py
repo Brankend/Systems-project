@@ -164,7 +164,6 @@ while(len(tokens_stack) > 0 or len(rmd) > 0):
     print(current_token)
     if(isinstance(current,str)):
         if(current[0] == current_token or current == current_token or current == str(tokens_dic[current_token])):
-            print("if")
             result.append(current_token)
             print("matched")
             if(len(tokens_stack) > 0):
@@ -174,22 +173,17 @@ while(len(tokens_stack) > 0 or len(rmd) > 0):
             print("Didn't match with cfg")
             break
     elif(len(cfg[current]) == 1):
-        print("elif")
         for c in cfg[current][0]:
             rmd.append(c)
         print(rmd)
     else:
-        print("else")
         for x in cfg[current]:
             if(str(x[len(x)-1]) == str(tokens_dic[current_token]) or str(x[len(x)-1]) == current_token):
                 print("Found correct")
                 for c in x:
                     rmd.append(c)
                 break
-            else:
-                print("Couldn't find correct")
         print(rmd)
-    print(result)
 resstr = ""
 for x in range(0,len(result)):
     resstr += result.pop() + " "
