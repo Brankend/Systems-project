@@ -3,7 +3,7 @@ cond -> init;cmp;body
 init -> id = id | id = num
 cmp -> id cmpop id | id cmpop num
 cmpop -> > | < | >= | <= | == | != | !> | !<
-body -> id = line
+body -> id = line ;
 line -> id operator id | id operator num | num operator id | num operator num
 num -> 0num | 1num | 2num | 3num | 4num | 5num | 6num | 7num | 8num | 9num | ε
 operator -> + | - | * | \ | ^ | %
