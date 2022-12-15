@@ -63,10 +63,14 @@ lineRule = [[line2,operator,'id'],[line2,operator,'num']]
 #line = Node(data = 'line',children=lineRule)
 line = CP("line")
 
+#updateRule = [['id','=',line2,operator,'id'],['id','=',line2,operator,'num'],['id','++'],['id','--']]
+update = CP("update")
 
-bodyRule = [['id','=',line,';'],['id','++'],['id','--']]
+body2Rule = [['id','=',line2,operator,'id'],['id','=',line2,operator,'num'],['id','++'],['id','--']]
+body2 = CP('body2')
 #body = Node(data='body',children=bodyRule)
 body = CP("body")
+bodyRule = [[body,body2,';'],[]]
 
 
 cmpopRule = [['>'],['<'],['>='],['<='],['=='],['!='],['!>'],['!<']]
@@ -84,7 +88,7 @@ initRule = [['id','=','id'],['id','=','num']]
 init = CP("init")
 
 
-condRule = [[init,';',cmp,';',body]]
+condRule = [[init,';',cmp,';',update]]
 #cond = Node(data='cond',children=condRule)
 cond = CP("cond")
 
@@ -103,6 +107,9 @@ for e in matchrule :
 cfg = {
     letter : letterRule,
     digit : digitRule,
+    #update : updateRule,
+    update : body2Rule,
+    body2 : body2Rule,
     #id1 : id1Rule,
     #id : idRule,
     operator : operatorRule,
@@ -189,7 +196,9 @@ while(len(tokens_stack) > 0 or len(rmd) > 0):
         print(rmd)
     else:
         for x in cfg[current]:
-            if(str(x[len(x)-1]) == str(tokens_dic[current_token]) or str(x[len(x)-1]) == current_token):
+            if(len(x) == 0):
+                break
+            elif(str(x[len(x)-1]) == str(tokens_dic[current_token]) or str(x[len(x)-1]) == current_token):
                 print("Found correct")
                 #matchee.push(x)
                 for c in x:
