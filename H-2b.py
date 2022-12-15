@@ -2,6 +2,7 @@ import nltk
 import re
 import pandas as pd
 from IPython.display import display
+from binarytree import Node
 class CP:
     def __init__(self,data):
         self.data = data
@@ -15,6 +16,7 @@ class Node:
         self.children = children
 
 
+flagerror=0
 letter = CP('letter')
 letterRule = []
 for x in range (65,91):
@@ -91,6 +93,12 @@ sRule = [['for','(',cond,')','{',body,'}']]
 #s = Node(data='s',children=sRule)
 s=CP('s')
 tokens_dic = {}
+matchrule=[initRule[1]]
+print(" walaa    aaal;la;a;a;la")
+for e in matchrule :
+    print(e[1])
+
+
 
 cfg = {
     letter : letterRule,
@@ -153,6 +161,7 @@ for token in prog_tokens:
     tokens_stack.append(token)
 rmd = []
 result = []
+matchee=[]
 print(cfg[s][0])
 for x in cfg[s][0]:
     rmd.append(x)
@@ -171,6 +180,7 @@ while(len(tokens_stack) > 0 or len(rmd) > 0):
         else:
             #print(rmd)
             print("Didn't match with cfg")
+            flagerror=1
             break
     elif(len(cfg[current]) == 1):
         for c in cfg[current][0]:
@@ -180,11 +190,84 @@ while(len(tokens_stack) > 0 or len(rmd) > 0):
         for x in cfg[current]:
             if(str(x[len(x)-1]) == str(tokens_dic[current_token]) or str(x[len(x)-1]) == current_token):
                 print("Found correct")
+                #matchee.push(x)
                 for c in x:
                     rmd.append(c)
                 break
         print(rmd)
 resstr = ""
+abdo=[]
 for x in range(0,len(result)):
-    resstr += result.pop() + " "
+   abdo.append(result.pop())
+# for x in range(0,len(result)):
+#     resstr += result.pop() + " "
+#print(resstr)
+for x in abdo:
+     resstr+= x + " "
+#    print(x)
+   
 print(resstr)
+
+# getting matched non terminals into arrays
+matchedinitial=[]
+matchedcondition=[]
+matchedupdate=[]
+matchedbody=[]   
+for x in range(2,5):
+     matchedinitial.append(abdo[x])
+
+for x in range(6,9):
+     matchedcondition.append(abdo[x])
+for x in range(10,12):
+     matchedupdate.append(abdo[x])
+
+for x in range(14,len(abdo)-1):
+       matchedbody.append(abdo[x])
+
+print("matched initializer ")
+for x in matchedinitial:
+    print(x)
+
+print("matched cond ")
+for x in matchedcondition:
+    print(x)    
+
+print("matched upd ")
+for x in matchedupdate:
+    print(x)    
+
+print("matched body ")
+for x in matchedbody:
+    print(x)     
+
+ #plotting syntax tree     
+semicln =';' 
+from binarytree import Node
+root = Node(abdo[0])
+#left subtree
+root.left = Node(semicln)
+root.left.left = Node(matchedinitial[1])
+root.left.left.left =Node(matchedinitial[0])
+root.left.left.right =Node(matchedinitial[2])
+root.left.right = Node(semicln)
+root.left.right.left = Node(matchedcondition[1])
+root.left.right.left.left = Node(matchedcondition[0])
+root.left.right.left.right = Node(matchedcondition[2])
+root.left.right.right = Node(semicln)
+root.left.right.right.left = Node(matchedbody[1])
+root.left.right.right.left.left = Node(matchedbody[0])
+root.left.right.right.left.right = Node(matchedbody[3])
+root.left.right.right.left.right.left = Node(matchedbody[2])
+root.left.right.right.left.right.right = Node(matchedbody[4])
+#right subtreee
+root.right = Node(matchedupdate[1])
+root.right.left = Node(matchedupdate[0])
+
+
+
+print('for loop abstract syntax tree :', root)
+  
+#nodes=[abdo[0],';',matchedupdate[1],matchedinitial[1],';',matchedupdate[0],None,matchedinitial[0],matchedinitial[2],matchedcondition[1],';',None,None,None,None,matchedcondition[0],matchedcondition[2],matchedbody[1]]
+# binary_tree = build(nodes)
+# print('Binary tree from list :\n',
+#       binary_tree)
