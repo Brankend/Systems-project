@@ -3,6 +3,9 @@ import re
 import pandas as pd
 from IPython.display import display
 from binarytree import Node
+# from anytree import Node, RenderTree
+# from anytree.exporter import DotExporter
+#import graphviz
 class CP:
     def __init__(self,data):
         self.data = data
@@ -10,10 +13,7 @@ class CP:
         return str(self.data)
     def __repr__(self):
         return self.data
-class Node:
-    def __init__(self,data,children):
-        self.data = data
-        self.children = children
+
 
 
 flagerror=0
@@ -69,7 +69,7 @@ bodyRule = [['id','=',line,';'],['id','++'],['id','--']]
 body = CP("body")
 
 
-cmpopRule = ['>','<','>=','<=','==','!=','!>','!<']
+cmpopRule = [['>'],['<'],['>='],['<='],['=='],['!='],['!>'],['!<']]
 #cmpop = Node(data='cmpop',children=cmpopRule)
 cmpop = CP("cmpop")
 
@@ -180,8 +180,9 @@ while(len(tokens_stack) > 0 or len(rmd) > 0):
         else:
             #print(rmd)
             print("Didn't match with cfg")
-            flagerror=1
-            break
+            exit()
+            
+           
     elif(len(cfg[current]) == 1):
         for c in cfg[current][0]:
             rmd.append(c)
@@ -208,7 +209,29 @@ for x in abdo:
    
 print(resstr)
 
+
+
+#region failed tree(udo) 
+
+
+# udo = Node("Udo")
+# marc = Node("Marc", parent=udo)
+# lian = Node("Lian", parent=marc)
+# dan = Node("Dan", parent=udo)
+# jet = Node("Jet", parent=dan)
+# jan = Node("Jan", parent=dan)
+# joe = Node("Joe", parent=dan)
+# print(udo)
+
+
+# for pre, fill, node in RenderTree(udo):
+#     print("%s%s" % (pre, node.name))
+# DotExporter(udo).to_picture("udo.png")
+#endregion
+
+
 # getting matched non terminals into arrays
+
 matchedinitial=[]
 matchedcondition=[]
 matchedupdate=[]
@@ -240,8 +263,22 @@ print("matched body ")
 for x in matchedbody:
     print(x)     
 
- #plotting syntax tree     
-semicln =';' 
+if(len(matchedupdate)==2):
+  if(str(matchedupdate[1])=="++"):
+    matchedupdate[1]='='
+    matchedupdate.append(matchedupdate[0])
+    matchedupdate.append('+')
+    matchedupdate.append(1)
+
+  elif(str(matchedupdate[1])=="--"):
+    matchedupdate[1]='='
+    matchedupdate[2]=matchedupdate[0]
+    matchedupdate[3]='-'
+    matchedupdate[4]=1
+
+ 
+#plotting syntax tree     
+semicln =';' # lw fashlna 
 from binarytree import Node
 root = Node(abdo[0])
 #left subtree
@@ -266,8 +303,10 @@ root.right.left = Node(matchedupdate[0])
 
 
 print('for loop abstract syntax tree :', root)
-  
-#nodes=[abdo[0],';',matchedupdate[1],matchedinitial[1],';',matchedupdate[0],None,matchedinitial[0],matchedinitial[2],matchedcondition[1],';',None,None,None,None,matchedcondition[0],matchedcondition[2],matchedbody[1]]
-# binary_tree = build(nodes)
-# print('Binary tree from list :\n',
-#       binary_tree)
+
+    # nodes=[abdo[0],';',matchedupdate[1],matchedinitial[1],';',matchedupdate[0],None,matchedinitial[0],matchedinitial[2],matchedcondition[1],';',None,None,None,None,matchedcondition[0],matchedcondition[2],matchedbody[1]]
+    # binary_tree = build(nodes)
+    # print('Binary tree from list :\n',
+    #       binary_tree)
+
+
