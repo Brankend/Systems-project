@@ -3,6 +3,8 @@ import re
 import pandas as pd
 from IPython.display import display
 from binarytree import Node
+from binarytree import build
+
 # from anytree import Node, RenderTree
 # from anytree.exporter import DotExporter
 #import graphviz
@@ -220,102 +222,160 @@ print(resstr)
 
 
 
-#region failed tree(udo) 
 
 
-# udo = Node("Udo")
-# marc = Node("Marc", parent=udo)
-# lian = Node("Lian", parent=marc)
-# dan = Node("Dan", parent=udo)
-# jet = Node("Jet", parent=dan)
-# jan = Node("Jan", parent=dan)
-# joe = Node("Joe", parent=dan)
-# print(udo)
+#################################################################################################################################
+#FUN STARTS HEREEEEEEEEEEEEEE
 
 
-# for pre, fill, node in RenderTree(udo):
-#     print("%s%s" % (pre, node.name))
-# DotExporter(udo).to_picture("udo.png")
+
+#this function splits matched body list into nested list each list for statemnt in the body block wasnot eassyyyyy to be honest :)
+
+#region functions declaraion
+def grp_ele(test_list):
+    statement = []
+    for i in test_list: 
+        if(str(i)==";"):
+            if statement:  
+                statement.append(None)
+                statement.append(None)
+                yield statement 
+                statement = []
+            #yield i  
+        else: 
+            statement.append(i)
+    if statement: 
+        statement.append(None)
+        statement.append(None)
+        yield statement
+
+def handle(tohandle_list):
+    if(len(tohandle_list)<4):
+     if(str(tohandle_list[1])=="++"):
+            tohandle_list[1]='='
+            tohandle_list.append(tohandle_list[0])
+            tohandle_list.append('+')
+            tohandle_list.append(1)
+
+     elif(str(tohandle_list[1])=="--"):
+            tohandle_list[1]='='
+            tohandle_list.append(tohandle_list[0])
+            tohandle_list.append('-')
+            tohandle_list.append(1)
+
+def arrange(list):
+    swaped=[]
+    swaped.append(list[1])
+    swaped.append(list[0])
+    swaped.append(list[3])
+    swaped.append(list[5])
+    swaped.append(list[5])
+    swaped.append(list[2])
+    swaped.append(list[4])
+    
+    return swaped
 #endregion
 
 
-# getting matched non terminals into arrays
-
+#region getting matched non terminals into lists,, abdo is list of the parsed source code (tokens )
 matchedinitial=[]
 matchedcondition=[]
 matchedupdate=[]
-matchedbody=[]   
+matchedbody=[]      
+brckindex=0  
+#endregion
 for x in range(2,5):
      matchedinitial.append(abdo[x])
 
 for x in range(6,9):
      matchedcondition.append(abdo[x])
-for x in range(10,12):
+for x in range(10,len(abdo)):
+    if(abdo[x]!=")"):
      matchedupdate.append(abdo[x])
+    else:
+        brckindex=x
+        break
 
-for x in range(14,len(abdo)-1):
+for x in range((brckindex+2),len(abdo)-1):
        matchedbody.append(abdo[x])
 
-print("matched initializer ")
-for x in matchedinitial:
-    print(x)
+#region printing_matched_list
+# print("matched initializer ")
+# for x in matchedinitial:
+#     print(x)
 
-print("matched cond ")
-for x in matchedcondition:
-    print(x)    
+# print("matched cond ")
+# for x in matchedcondition:
+#     print(x)    
 
-print("matched upd ")
-for x in matchedupdate:
-    print(x)    
+# print("matched upd ")
+# for x in matchedupdate:
+#     print(x)    
 
-print("matched body ")
-for x in matchedbody:
-    print(x)     
+# print("matched body ")
+# for x in matchedbody:
+#     print(x)     
+#endregion
 
-if(len(matchedupdate)==2):
-  if(str(matchedupdate[1])=="++"):
-    matchedupdate[1]='='
-    matchedupdate.append(matchedupdate[0])
-    matchedupdate.append('+')
-    matchedupdate.append(1)
+#region handling_unary_operations
+handle(matchedupdate)
 
-  elif(str(matchedupdate[1])=="--"):
-    matchedupdate[1]='='
-    matchedupdate[2]=matchedupdate[0]
-    matchedupdate[3]='-'
-    matchedupdate[4]=1
+statements=list(grp_ele(matchedbody))
 
- 
-#plotting syntax tree     
-semicln =';' # lw fashlna 
-from binarytree import Node
+for x in statements:
+    if(len(x)<=4):
+        del x[-1]
+        del x[-1]
+        handle(x)
+        x.append(None)
+        x.append(None)
+
+
+#endregion
+
+for x in range(0,len(statements)): #arranging each statement to be able to pass it to build()
+    statements[x]=arrange(statements[x])
+print(statements)
+#region plotting syntax tree     
+semicln ='' # lw fshlna 
 root = Node(abdo[0])
 #left subtree
 root.left = Node(semicln)
-root.left.left = Node(matchedinitial[1])
-root.left.left.left =Node(matchedinitial[0])
-root.left.left.right =Node(matchedinitial[2])
+
+#setting inizialization subtree and link to main tree
+initroot = Node(matchedinitial[1])
+initroot.left =Node(matchedinitial[0])
+initroot.right =Node(matchedinitial[2])
+root.left.left=initroot
 root.left.right = Node(semicln)
-root.left.right.left = Node(matchedcondition[1])
-root.left.right.left.left = Node(matchedcondition[0])
-root.left.right.left.right = Node(matchedcondition[2])
+
+#setting condition subtree and link to main tree
+condroot = Node(matchedcondition[1])
+condroot.left= Node(matchedcondition[0])
+condroot.right = Node(matchedcondition[2])
+root.left.right.left=condroot
+
 root.left.right.right = Node(semicln)
-root.left.right.right.left = Node(matchedbody[1])
-root.left.right.right.left.left = Node(matchedbody[0])
-root.left.right.right.left.right = Node(matchedbody[3])
-root.left.right.right.left.right.left = Node(matchedbody[2])
-root.left.right.right.left.right.right = Node(matchedbody[4])
+#setting body subtree and link to main tree
+root.left.right.right = build(statements[0])
 #right subtreee
-root.right = Node(matchedupdate[1])
-root.right.left = Node(matchedupdate[0])
+updroot=Node(matchedupdate[1])
+updroot.left = Node(matchedupdate[0])
+updroot.right = Node(matchedupdate[3])
+updroot.right.left = Node(matchedupdate[2])
+updroot.right.right = Node(matchedupdate[4])
+root.right = updroot
+print('For loop abstract syntax tree :', root)
 
+#endregion
 
+#region printing every syntax tee alone
+print("Abstract Syntax Tree for Initialization: ",initroot)
+print("Abstract Syntax Tree for Condition: ",condroot)
+print("Abstract Syntax Tree for Update: ",updroot)
+for x in range(0,len(statements)):
+    print("Abstract Syntax Tree for Body statement: ",x+1)
+    statmenttree=build(statements[x])
+    print(statmenttree)
 
-print('for loop abstract syntax tree :', root)
-
-    # nodes=[abdo[0],';',matchedupdate[1],matchedinitial[1],';',matchedupdate[0],None,matchedinitial[0],matchedinitial[2],matchedcondition[1],';',None,None,None,None,matchedcondition[0],matchedcondition[2],matchedbody[1]]
-    # binary_tree = build(nodes)
-    # print('Binary tree from list :\n',
-    #       binary_tree)
-
-
+#endregion   
