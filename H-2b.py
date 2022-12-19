@@ -237,16 +237,16 @@ def grp_ele(test_list):
     for i in test_list: 
         if(str(i)==";"):
             if statement:  
-                statement.append(None)
-                statement.append(None)
+                #statement.append(None)
+                #statement.append(None)
                 yield statement 
                 statement = []
             #yield i  
         else: 
             statement.append(i)
     if statement: 
-        statement.append(None)
-        statement.append(None)
+        #statement.append(None)
+        #statement.append(None)
         yield statement
 
 def handle(tohandle_list):
@@ -267,13 +267,36 @@ def arrange(list):
     swaped=[]
     swaped.append(list[1])
     swaped.append(list[0])
-    swaped.append(list[3])
-    swaped.append(list[5])
-    swaped.append(list[5])
-    swaped.append(list[2])
-    swaped.append(list[4])
-    
+    if(len(list)>3):
+        swaped.append(list[3])
+     # swaped.append(list[5])
+     # swaped.append(list[5])
+
+        swaped.append(list[2])
+        swaped.append(list[4])
+    else:  
+      swaped.append(list[2])  
+
+        
     return swaped
+
+
+def statments_to_string(list): #converting every statment to string
+    strr=' ('
+    brcflag=0
+    for x in list:
+        if(x=='+' or x=='-'or x=='*' or x=='/'):
+                strr+=' ' + '('
+                brcflag=1
+        strr+=' '+str(x)
+
+    
+    strr+=')'
+    if(brcflag==1):
+     strr+=')'
+    return strr
+            
+
 #endregion
 
 
@@ -317,26 +340,22 @@ for x in range((brckindex+2),len(abdo)-1):
 #     print(x)     
 #endregion
 
-#region handling_unary_operations
+#region handling_unary_operations 
 handle(matchedupdate)
 
 statements=list(grp_ele(matchedbody))
 
 for x in statements:
     if(len(x)<=4):
-        del x[-1]
-        del x[-1]
+        #del x[-1]
+        #del x[-1]
         handle(x)
-        x.append(None)
-        x.append(None)
+        #x.append(None)
+        #x.append(None)
 
 
 #endregion
-
-for x in range(0,len(statements)): #arranging each statement to be able to pass it to build()
-    statements[x]=arrange(statements[x])
-print(statements)
-#region plotting syntax tree     
+#region plotting syntax tree if one statment no proplems    
 semicln ='' # lw fshlna 
 root = Node(abdo[0])
 #left subtree
@@ -357,7 +376,13 @@ root.left.right.left=condroot
 
 root.left.right.right = Node(semicln)
 #setting body subtree and link to main tree
-root.left.right.right = build(statements[0])
+
+bodyroot=Node(statements[0][1])
+bodyroot.left = Node(statements[0][0])
+bodyroot.right = Node(statements[0][3])
+bodyroot.right.left = Node(statements[0][2])
+bodyroot.right.right = Node(statements[0][4])
+root.left.right.right = bodyroot
 #right subtreee
 updroot=Node(matchedupdate[1])
 updroot.left = Node(matchedupdate[0])
@@ -370,12 +395,65 @@ print('For loop abstract syntax tree :', root)
 #endregion
 
 #region printing every syntax tee alone
-print("Abstract Syntax Tree for Initialization: ",initroot)
-print("Abstract Syntax Tree for Condition: ",condroot)
-print("Abstract Syntax Tree for Update: ",updroot)
-for x in range(0,len(statements)):
-    print("Abstract Syntax Tree for Body statement: ",x+1)
-    statmenttree=build(statements[x])
-    print(statmenttree)
 
-#endregion   
+# print("Abstract Syntax Tree for Initialization: ",initroot)
+# print("Abstract Syntax Tree for Condition: ",condroot)
+# print("Abstract Syntax Tree for Update: ",updroot)
+# for x in range(0,len(statements)):
+#     print("Abstract Syntax Tree for Body statement: ",x+1)
+#     statmenttree=build(statements[x])
+#     print(statmenttree)
+
+if(len(statements)==1): # to use binary tree only
+    exit()
+#endregion  
+
+
+
+#region arranging list then put into strings fo nltk tree
+matchedcondition=arrange(matchedcondition)
+matchedinitial=arrange(matchedinitial)
+matchedupdate=arrange(matchedupdate)
+
+condition_str=statments_to_string(matchedcondition)
+update_str=statments_to_string(matchedupdate)
+init_str=statments_to_string(matchedinitial)
+statments_str=''
+
+
+
+
+for x in range(0,len(statements)): #arranging each statement to be able to pass it to build()
+    statements[x]=arrange(statements[x])
+    statements[x]=statments_to_string(statements[x])
+    statments_str+=statements[x]
+#print(statments_str)
+
+#endregion
+
+
+# (for (left (init init_str) (cond cond_str)) (right (body body_str) (update upd_str)))
+
+# The Last Dance ->
+Tree_Str="(for (Initialization"
+Tree_Str+=init_str
+Tree_Str+=") (Condition"
+Tree_Str+=condition_str
+Tree_Str+=") (Body"
+Tree_Str+=statments_str
+Tree_Str+=") (Update"
+Tree_Str+=update_str
+Tree_Str+="))"
+
+from nltk.tree import Tree
+import nltk.draw
+from nltk.draw.tree import TreeView
+prog_Tree=Tree.fromstring(Tree_Str)
+prog_Tree.draw()
+print(Tree_Str)
+
+
+
+
+
+ 
