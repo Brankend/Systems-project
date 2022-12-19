@@ -1,9 +1,8 @@
 for(x = h; x >= 10;x-- )
 {
-	y++ ;
-	x=p*m;
-	c++ ;
-	c=abdelrahman*sehs;
+	h-- ;
+	k++ ;
+	m=m*x;
 	
 
 }

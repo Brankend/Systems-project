@@ -355,44 +355,50 @@ for x in statements:
 
 
 #endregion
-#region plotting syntax tree if one statment no proplems    
-semicln ='' # lw fshlna 
-root = Node(abdo[0])
-#left subtree
-root.left = Node(semicln)
+#region plotting syntax tree if one statment no proplems
+if(len(statements)==1): # to use binary tree only
+    
+    semicln ='' # lw fshlna 
+    root = Node(abdo[0])
+    #left subtree
+    root.left = Node('Init_Condition')
 
-#setting inizialization subtree and link to main tree
-initroot = Node(matchedinitial[1])
-initroot.left =Node(matchedinitial[0])
-initroot.right =Node(matchedinitial[2])
-root.left.left=initroot
-root.left.right = Node(semicln)
+    #setting inizialization subtree and link to main tree
+    initroot = Node(matchedinitial[1])
+    initroot.left =Node(matchedinitial[0])
+    initroot.right =Node(matchedinitial[2])
+    root.left.left=initroot
+    root.left.right = Node('Condition_Body')
 
-#setting condition subtree and link to main tree
-condroot = Node(matchedcondition[1])
-condroot.left= Node(matchedcondition[0])
-condroot.right = Node(matchedcondition[2])
-root.left.right.left=condroot
+    #setting condition subtree and link to main tree
+    condroot = Node(matchedcondition[1])
+    condroot.left= Node(matchedcondition[0])
+    condroot.right = Node(matchedcondition[2])
+    root.left.right.left=condroot
 
-root.left.right.right = Node(semicln)
-#setting body subtree and link to main tree
+    root.left.right.right = Node(semicln)
+    #setting body subtree and link to main tree
 
-bodyroot=Node(statements[0][1])
-bodyroot.left = Node(statements[0][0])
-bodyroot.right = Node(statements[0][3])
-bodyroot.right.left = Node(statements[0][2])
-bodyroot.right.right = Node(statements[0][4])
-root.left.right.right = bodyroot
-#right subtreee
-updroot=Node(matchedupdate[1])
-updroot.left = Node(matchedupdate[0])
-updroot.right = Node(matchedupdate[3])
-updroot.right.left = Node(matchedupdate[2])
-updroot.right.right = Node(matchedupdate[4])
-root.right = updroot
-print('For loop abstract syntax tree :', root)
+    bodyroot=Node(statements[0][1])
+    bodyroot.left = Node(statements[0][0])
+    bodyroot.right = Node(statements[0][3])
+    bodyroot.right.left = Node(statements[0][2])
+    bodyroot.right.right = Node(statements[0][4])
+    root.left.right.right = bodyroot
+    #right subtreee
+    updroot=Node(matchedupdate[1])
+    updroot.left = Node(matchedupdate[0])
+    updroot.right = Node(matchedupdate[3])
+    updroot.right.left = Node(matchedupdate[2])
+    updroot.right.right = Node(matchedupdate[4])
+    root.right=Node('Update')
+    root.right.left = updroot
+    print('For loop abstract syntax tree :', root)
 
 #endregion
+
+    
+
 
 #region printing every syntax tee alone
 
@@ -403,10 +409,9 @@ print('For loop abstract syntax tree :', root)
 #     print("Abstract Syntax Tree for Body statement: ",x+1)
 #     statmenttree=build(statements[x])
 #     print(statmenttree)
-
-if(len(statements)==1): # to use binary tree only
-    exit()
 #endregion  
+
+
 
 
 
@@ -450,7 +455,7 @@ import nltk.draw
 from nltk.draw.tree import TreeView
 prog_Tree=Tree.fromstring(Tree_Str)
 prog_Tree.draw()
-print(Tree_Str)
+#print(Tree_Str)
 
 
 
